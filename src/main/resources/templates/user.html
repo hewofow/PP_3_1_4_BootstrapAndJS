@@ -1,11 +1,42 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Spring Security Example</title>
+    <meta charset="UTF-8">
+    <title>User home page</title>
+    <link rel="stylesheet" th:href="@{/styles.css}"/>
 </head>
 <body>
-<h1>User, welcome spring boot security page!</h1>
-
-
+    <div align="center">
+        <h1 th:text="${user.getFirstName()}"></h1> <br>
+            <table>
+                <tr>
+                    <td>id</td>
+                    <td th:text="${user.getId()}"></td>
+                </tr>
+                <tr>
+                    <td>login</td>
+                    <td th:text="${user.getLogin()}"></td>
+                </tr>
+                <tr>
+                    <td>password</td>
+                    <td th:text="${user.getPassword()}"></td>
+                </tr>
+                <tr>
+                    <td>first name</td>
+                    <td th:text="${user.getFirstName()}"></td>
+                </tr>
+                <tr>
+                    <td>last name</td>
+                    <td th:text="${user.getLastName()}"></td>
+                </tr>
+                <tr>
+                    <td>phone number</td>
+                    <td th:text="${user.getPhoneNumber()}"></td>
+                </tr>
+            </table>
+        <form th:method="GET" th:action="@{/logout}">
+            <input type="submit" value="Logout">
+        </form>
+    </div>
 </body>
 </html>
