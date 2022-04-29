@@ -1,13 +1,17 @@
 package ru.kata.spring.boot_security.demo.models;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -31,17 +35,18 @@ public class User {
     @JoinTable(name = "user_id",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Collection<Role> roles;
+    private Set<Role> roles = new HashSet<>();
 
     public User() {
     }
 
-    public User(String login, String password, String firstName, String lastName, String phoneNumber) {
+    public User(String login, String password, String firstName, String lastName, String phoneNumber, Role role) {
         this.login = login;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
+        this.roles.add(role);
     }
 
     @Override
@@ -69,9 +74,33 @@ public class User {
     public String getLogin() { return login; }
     public void setLogin(String login) { this.login = login; }
 
-    public String getPassword() { return password; }
+    public Set<Role> getRoles() { return roles; }
+    public void setRoles(Set<Role> roles) { this.roles = roles; }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.roles.stream()
+                .map(r -> new SimpleGrantedAuthority(r.getName()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public String getPassword() { return this.password; }
     public void setPassword(String password) { this.password = password; }
 
-    public Collection<Role> getRoles() { return roles; }
-    public void setRoles(Collection<Role> roles) { this.roles = roles; }
+    @Override
+    public String getUsername() { return this.login; }
+
+    @Override
+    public boolean isAccountNonExpired() { return false; }
+
+    @Override
+    public boolean isAccountNonLocked() { return false; }
+
+    @Override
+    public boolean isCredentialsNonExpired() { return false; }
+
+    @Override
+    public boolean isEnabled() { return false; }
+
 }

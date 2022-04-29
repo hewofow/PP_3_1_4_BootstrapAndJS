@@ -2,43 +2,58 @@ package ru.kata.spring.boot_security.demo.repositories;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
+import ru.kata.spring.boot_security.demo.services.RoleService;
+import ru.kata.spring.boot_security.demo.services.UserService;
+
+import java.security.SecureRandom;
 
 @Component
 public class InitialiyationBeanImpl implements InitializingBean {
-    private UserRepository userRepository;
-    private RoleRepository roleRepository;
+    private UserService userService;
+    private RoleService roleService;
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public InitialiyationBeanImpl(UserRepository userRepository, RoleRepository roleRepository) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
+    public InitialiyationBeanImpl(UserService userService, RoleService roleService) {
+        this.userService = userService;
+        this.roleService = roleService;
+        this.bCryptPasswordEncoder = new BCryptPasswordEncoder(10, new SecureRandom());
     }
 
     @Override
     public void afterPropertiesSet() throws Exception {
         /*
-        log1 - p1
-        log2 - p2
-        ...
-        log5 - p5
+            log1 - p1
+            log2 - p2
+            ...
+            log5 - p5
          */
-        userRepository.save(new User("log1", "$2a$12$CRsBgI2Km.70/L.1F3kEvuFQP6RzcL9zDHsAl9UcqLhqpU6iGDUxe",
-                "Vasya", "Ivanov", "1000000001"));
-        userRepository.save(new User("log2", "$2a$12$vTtzBMiIAl9SadwvFpSIbOWCEtsceNMEwNGzSyW7FXziOgPnwkBje",
-                "Petya", "Golovach", "2000000002"));
-        userRepository.save(new User("log3", "$2a$12$1TR2x3Y650VdRe6ViLqD.ODMOOhyHghJl6NxRbMSd8RFWaHe2Y1l2",
-                "Bob", "Sponge", "3000000003"));
-        userRepository.save(new User("log4", "$2a$12$d6wUQqk75wylQHb.f3.7oesdT9Z7jefj0jO5UZXmzgt3c8h1TeftK",
-                "Johan", "Kek", "4000000004"));
-        userRepository.save(new User("log5", "$2a$12$wlbuP8huAQQXSd2XfbDUEeDrNKxE6cUp9EjWoWF6eYmMdCOjkJX7W",
-                "Pepa", "Josefina", "5000000005"));
-        userRepository.save(new User("admin", "$2a$12$nF5YQDpTYW/r3xlJViZCkuOsdtUKtZ7wprBuV0ey/U2CWyH7.d4m.",
-                "Admin", "Admin", "6000000006"));
+        Role roleAdmin = new Role(1, "ROLE_ADMIN");
+        Role roleUser = new Role(2, "ROLE_USER");
+        roleService.add(roleAdmin);
+        roleService.add(roleUser);
 
-        roleRepository.save(new Role(1, "ROLE_USER"));
-        roleRepository.save(new Role(2, "ROLE_ADMIN"));
+        User user1 = new User("log1", bCryptPasswordEncoder.encode("p1"),
+                "Vasya", "Ivanov", "1000000001", roleUser);
+        User user2 = new User("log2", bCryptPasswordEncoder.encode("p2"),
+                "Petya", "Golovach", "2000000002", roleUser);
+        User user3 = new User("log3", bCryptPasswordEncoder.encode("p3"),
+                "Bob", "Sponge", "3000000003", roleUser);
+        User user4 = new User("log4", bCryptPasswordEncoder.encode("p4"),
+                "Johan", "Kek", "4000000004", roleUser);
+        User user5 = new User("log5", bCryptPasswordEncoder.encode("p5"),
+                "Pepa", "Josefina", "5000000005", roleUser);
+        User user6 = new User("admin", bCryptPasswordEncoder.encode("admin"),
+                "Admin", "Admin", "6000000006", roleAdmin);
+        userService.add(user1);
+        userService.add(user2);
+        userService.add(user3);
+        userService.add(user4);
+        userService.add(user5);
+        userService.add(user6);
     }
 }
