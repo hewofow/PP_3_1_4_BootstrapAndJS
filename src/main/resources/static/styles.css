@@ -1,11 +1,21 @@
-table {
-    font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+body, html {
+    height: 100%;
+    font-family: "Verdana", "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #eeeeee;
+}
+.wrapper {
+    letter-spacing: -1px;
     font-size: 14px;
+}
+table {
     border-collapse: collapse;
     text-align: center;
 }
 th {
-    background: #AFCDE7;
+    background: #73a698;
     color: white;
 }
 th, td {
@@ -15,8 +25,49 @@ th, td {
     padding: 10px 20px;
 }
 td {
-    background: #D8E6F3;
+    background: #e5e5e5;
 }
 th:first-child, td:first-child {
     text-align: left;
+}
+.header {
+    height: 150px;
+    width: 100%;
+    background: #4c4c4c;
+    color: white;
+    display: flex;
+}
+.head_menu {
+    text-align: right;
+    font: 14px Verdana;
+    margin: auto 100px;
+}
+.head_menu a {
+    outline: none;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+}
+.head_menu a:hover {
+    color: grey;
+    text-decoration: none;
+    cursor: pointer;
+}
+.middle {
+    padding: 0 0 80px;
+    height: 1%;
+    position: relative;
+    display: flex;
+}
+.container {
+    margin: 30px auto;
+    min-width: 700px;
+    overflow: hidden;
+    background-color: #FFFFFF;
+    border-radius: 10px;
+}
+.content {
+    margin: 60px;
+    min-height: 500px;
+    text-align: center;
 }

@@ -3,6 +3,8 @@ spring:
     url: "jdbc:mysql://localhost:3306/crud_app?allowPublicKeyRetrieval=true&verifyServerCertificate=false&useSSL=false&requireSSL=false&useLegacyDatetimeCode=false&amp&serverTimezone=UTC"
     username: root
     password: bvx8e2bvx8e2
+  main:
+    allow-circular-references: true
   jpa:
     hibernate.ddl-auto: create-drop
     show-sql: true

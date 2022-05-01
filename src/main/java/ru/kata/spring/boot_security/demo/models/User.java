@@ -29,7 +29,7 @@ public class User implements UserDetails {
     @Column(name ="phone_number")
     private String phoneNumber;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_id",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
@@ -88,15 +88,15 @@ public class User implements UserDetails {
     public String getUsername() { return this.login; }
 
     @Override
-    public boolean isAccountNonExpired() { return false; }
+    public boolean isAccountNonExpired() { return true; }
 
     @Override
-    public boolean isAccountNonLocked() { return false; }
+    public boolean isAccountNonLocked() { return true; }
 
     @Override
-    public boolean isCredentialsNonExpired() { return false; }
+    public boolean isCredentialsNonExpired() { return true; }
 
     @Override
-    public boolean isEnabled() { return false; }
+    public boolean isEnabled() { return true; }
 
 }

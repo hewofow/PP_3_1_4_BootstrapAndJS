@@ -6,37 +6,24 @@
     <link rel="stylesheet" th:href="@{/styles.css}"/>
 </head>
 <body>
-    <div align="center">
+    <div th:replace="header"></div>
         <h1 th:text="${user.getFirstName()}"></h1> <br>
-            <table>
-                <tr>
-                    <td>id</td>
-                    <td th:text="${user.getId()}"></td>
-                </tr>
-                <tr>
-                    <td>login</td>
-                    <td th:text="${user.getLogin()}"></td>
-                </tr>
-                <tr>
-                    <td>password</td>
-                    <td th:text="${user.getPassword()}"></td>
-                </tr>
-                <tr>
-                    <td>first name</td>
-                    <td th:text="${user.getFirstName()}"></td>
-                </tr>
-                <tr>
-                    <td>last name</td>
-                    <td th:text="${user.getLastName()}"></td>
-                </tr>
-                <tr>
-                    <td>phone number</td>
-                    <td th:text="${user.getPhoneNumber()}"></td>
-                </tr>
-            </table>
-        <form th:method="GET" th:action="@{/logout}">
-            <input type="submit" value="Logout">
-        </form>
-    </div>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>First name</th>
+                <th>Last name</th>
+                <th>Phone number</th>
+                <th>Login</th>
+            </tr>
+            <tr>
+                <td th:text="${user.getId()}"></td>
+                <td th:text="${user.getFirstName()}"></td>
+                <td th:text="${user.getLastName()}"></td>
+                <td th:text="${user.getPhoneNumber()}"></td>
+                <td th:text="${user.getLogin()}"></td>
+            </tr>
+        </table>
+    <div th:replace="footer"></div>
 </body>
 </html>
