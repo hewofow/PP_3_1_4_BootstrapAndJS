@@ -28,7 +28,7 @@
         <select th:field="*{roles}" id="roles" multiple>
             <option th:each="role: ${roleList}"
                     th:value="${role.getId()}"
-                    th:text="${role.getAuthority()}"></option>
+                    th:text="${role.toString()}"></option>
         </select><br><br>
         <input type="submit" value="Add new user">
     </form>

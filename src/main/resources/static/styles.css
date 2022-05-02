@@ -33,7 +33,7 @@ th:first-child, td:first-child {
 .header {
     height: 150px;
     width: 100%;
-    background: #4c4c4c;
+    background: #73a698;
     color: white;
     display: flex;
 }
