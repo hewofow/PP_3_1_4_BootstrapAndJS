@@ -14,8 +14,8 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name ="login")
-    private String login;
+    @Column(name ="email")
+    private String email;
 
     @Column(name ="password")
     private String password;
@@ -26,9 +26,6 @@ public class User implements UserDetails {
     @Column(name ="last_name")
     private String lastName;
 
-    @Column(name ="phone_number")
-    private String phoneNumber;
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_id",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -38,12 +35,11 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(String login, String password, String firstName, String lastName, String phoneNumber, Role role) {
-        this.login = login;
+    public User(String email, String password, String firstName, String lastName, Role role) {
+        this.email = email;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.phoneNumber = phoneNumber;
         this.roles.add(role);
     }
 
@@ -53,7 +49,6 @@ public class User implements UserDetails {
                 "id=" + id +
                 ", name='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
                 '}';
     }
 
@@ -66,11 +61,8 @@ public class User implements UserDetails {
     public String getLastName() { return lastName; }
     public void setLastName(String lastName) { this.lastName = lastName; }
 
-    public String getPhoneNumber() { return phoneNumber; }
-    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
-
-    public String getLogin() { return login; }
-    public void setLogin(String login) { this.login = login; }
+    public String getEmail() { return email; }
+    public void setEmail(String email) { this.email = email; }
 
     public Set<Role> getRoles() { return roles; }
     public void setRoles(Set<Role> roles) { this.roles = roles; }
@@ -85,7 +77,7 @@ public class User implements UserDetails {
     public void setPassword(String password) { this.password = password; }
 
     @Override
-    public String getUsername() { return this.login; }
+    public String getUsername() { return this.email; }
 
     @Override
     public boolean isAccountNonExpired() { return true; }

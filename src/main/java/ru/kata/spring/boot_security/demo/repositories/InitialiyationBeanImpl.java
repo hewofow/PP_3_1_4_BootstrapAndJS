@@ -29,12 +29,12 @@ public class InitialiyationBeanImpl implements InitializingBean {
         roleService.add(roleAdmin);
         roleService.add(roleUser);
 
-        User user1 = new User("usr1", "1", "Vasya", "Ivanov", "1000000001", roleUser);
-        User user2 = new User("usr2", "2", "Petya", "Golovach", "2000000002", roleUser);
-        User user3 = new User("usr3", "3", "Bob", "Sponge", "3000000003", roleUser);
-        User user4 = new User("usr4", "4", "Johan", "Kek", "4000000004", roleUser);
-        User user5 = new User("usr5", "5", "Pepa", "Josefina", "5000000005", roleUser);
-        User user6 = new User("admin", "admin", "Admin", "Admin", "6000000006", roleAdmin);
+        User user1 = new User("usr1@mail.ru", "1", "Vasya", "Ivanov", roleUser);
+        User user2 = new User("usr2@mail.ru", "2", "Petya", "Golovach", roleUser);
+        User user3 = new User("usr3@mail.ru", "3", "Bob", "Sponge", roleUser);
+        User user4 = new User("usr4@mail.ru", "4", "Johan", "Kek", roleUser);
+        User user5 = new User("usr5@mail.ru", "5", "Pepa", "Josefina", roleUser);
+        User user6 = new User("admin@mail.ru", "admin", "Admin", "Admin", roleAdmin);
         userService.add(user1);
         userService.add(user2);
         userService.add(user3);

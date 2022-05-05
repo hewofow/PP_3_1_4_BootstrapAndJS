@@ -19,9 +19,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) { //, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
-//        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -47,8 +46,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public User findByLogin(String login) {
-        return userRepository.findByLogin(login);
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email);
     }
 
     @Override
@@ -58,10 +57,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     @Transactional
-    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        User user = findByLogin(login);
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        User user = findByEmail(email);
         if (user == null) {
-            throw new UsernameNotFoundException(String.format("User %s not found", login));
+            throw new UsernameNotFoundException(String.format("User %s not found", email));
         }
         return user;
     }
