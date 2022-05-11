@@ -15,8 +15,8 @@ import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
-    private UserRepository userRepository;
-    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
 
     @Autowired
     public UserServiceImpl(UserRepository userRepository) {
@@ -36,7 +36,10 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public void update(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(user.getPassword().equals("")  ?
+                getById(user.getId()).getPassword() :
+                passwordEncoder.encode(user.getPassword())
+        );
         userRepository.save(user);
     }
 
