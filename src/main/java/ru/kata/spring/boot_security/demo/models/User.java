@@ -3,6 +3,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -35,12 +36,12 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(String email, String password, String firstName, String lastName, Role role) {
+    public User(String email, String password, String firstName, String lastName, Role...role) {
         this.email = email;
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.roles.add(role);
+        this.roles.addAll(Arrays.asList(role));
     }
 
     @Override

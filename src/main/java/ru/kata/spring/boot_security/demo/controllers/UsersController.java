@@ -22,7 +22,6 @@ public class UsersController {
         this.roleService = roleService;
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/admin")
     public String showTable(Model model, Principal principal) {
         model.addAttribute("userList", userService.listUsers());
@@ -32,32 +31,9 @@ public class UsersController {
         return "users";
     }
 
-    @PreAuthorize("hasRole('USER')")
-    @GetMapping("/user")
-    public String showProfile(Model model, Principal principal) {
-        model.addAttribute("user", userService.findByEmail(principal.getName()));
-        return "user";
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/admin/users")
-    public String createUser(@ModelAttribute("user") User user) {
-        userService.add(user);
-        return "redirect:/admin";
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    @PatchMapping("/admin/users/{id}")
-    public String updateUser(@ModelAttribute("user") User user) {
-        userService.update(user);
-        return "redirect:/admin";
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/admin/users/{id}")
-    public String deleteUser(@PathVariable("id") long id) {
-        userService.remove(id);
-        return "redirect:/admin";
-    }
-
+//    @GetMapping("/user")
+//    public String showProfile(Model model, Principal principal) {
+//        model.addAttribute("user", userService.findByEmail(principal.getName()));
+//        return "user";
+//    }
 }

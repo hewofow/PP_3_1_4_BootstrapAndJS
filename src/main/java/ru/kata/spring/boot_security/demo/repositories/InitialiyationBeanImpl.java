@@ -33,7 +33,7 @@ public class InitialiyationBeanImpl implements InitializingBean {
         User user2 = new User("usr2@mail.ru", "2", "Petya", "Golovach", roleUser);
         User user3 = new User("usr3@mail.ru", "3", "Bob", "Sponge", roleUser);
         User user4 = new User("usr4@mail.ru", "4", "Johan", "Kek", roleUser);
-        User user5 = new User("usr5@mail.ru", "5", "Pepa", "Josefina", roleUser);
+        User user5 = new User("usr5@mail.ru", "5", "Pepa", "Josefina", roleUser, roleAdmin);
         User user6 = new User("admin@mail.ru", "admin", "Admin", "Admin", roleAdmin);
         userService.add(user1);
         userService.add(user2);
