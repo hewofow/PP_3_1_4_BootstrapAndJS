@@ -28,6 +28,7 @@ public class InitialiyationBeanImpl implements InitializingBean {
         Role roleUser = new Role(2, "ROLE_USER");
         roleService.add(roleAdmin);
         roleService.add(roleUser);
+        roleService.add(new Role(3, "ROLE_BOBA"));
 
         User user1 = new User("usr1@mail.ru", "1", "Vasya", "Ivanov", roleUser);
         User user2 = new User("usr2@mail.ru", "2", "Petya", "Golovach", roleUser);
