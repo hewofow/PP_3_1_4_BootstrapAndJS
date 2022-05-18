@@ -38,6 +38,15 @@ async function fetchAllUsers(url) {
 }
 
 // void
+function fillTheRolesList(rolesArray, htmlElementId) {
+    let rolesAsOptionsList = ''
+    rolesArray.forEach((elem) => {
+        rolesAsOptionsList += '<option>' + elem.authority.substring(5) + '</option>'
+    })
+    document.getElementById(htmlElementId).innerHTML = rolesAsOptionsList
+}
+
+// void
 async function fetchPrincipal(url) {
     const response = await fetch(url)
     const data = await response.json()
@@ -64,7 +73,7 @@ async function fetchPrincipal(url) {
     }
 }
 
-// returns roles array (supposed to)
+// returns roles-objects array (remove global var &(?) fillTheRolesList() from the body)
 async function fetchRoles(url) {
     const response = await fetch(url)
     const data = await response.json()
@@ -72,17 +81,18 @@ async function fetchRoles(url) {
 
     if (data.length > 0) {
         data.forEach(r => {
-            allRoles.push(r.authority.substring(5))
+            allRoles.push(r)
         })
         console.log('Roles fetched!')
     }
 
     console.log(allRoles)
     roles = allRoles
+    fillTheRolesList(roles, 'onNewRoles')
     return allRoles
 }
 
-// void (roles ???)
+// void (roles ???) (remove global var from the body)
 async function openEditModal(idToEdit) {
     fetch('/api/users/' + idToEdit)
         .then(result => result.json())
@@ -92,20 +102,17 @@ async function openEditModal(idToEdit) {
             document.getElementById("onEditLastName").value = user.lastName
             document.getElementById("onEditEmail").value = user.email
             document.getElementById("onEditPassword").value = ''
-            document.getElementById("submitEditBtn").setAttribute('onclick',`submitEdit(${idToEdit})`)
-        })
+            document.getElementById("submitEditBtn").setAttribute('onclick', `submitEdit(${idToEdit})`)
 
-    let rolesAsOptionsList = ''
-    roles.forEach((elem) => {
-        rolesAsOptionsList += '<option>' + elem + '</option>'
-    })
-    document.getElementById('onEditRoles').innerHTML = rolesAsOptionsList
+            fillTheRolesList(roles, 'onEditRoles')
+            document.getElementById('onEditRoles').value = user.roles
+        })
 
     $('#modalEdit').modal('show')
     console.log('...editBtn click-bound function fully executed.')
 }
 
-// void (roles ???)
+// void
 async function openDeleteModal(idToDelete) {
     fetch('/api/users/' + idToDelete)
         .then(result => result.json())
@@ -115,9 +122,9 @@ async function openDeleteModal(idToDelete) {
             document.getElementById("onDeleteLastName").value = user.lastName
             document.getElementById("onDeleteEmail").value = user.email
             document.getElementById("onEditPassword").value = ''
-            document.getElementById("submitDeleteBtn").setAttribute('onclick',`submitDelete(${idToDelete})`)
+            fillTheRolesList(user.roles, 'onDeleteRoles')
+            document.getElementById("submitDeleteBtn").setAttribute('onclick', `submitDelete(${idToDelete})`)
         })
-    // $('#onDeleteRoles').attr('value', row.find('td:eq(4)').text())  // ACHTUNG!!!!
 
     $('#modalDelete').modal('show')
     console.log('...deleteBtn click-bound function fully executed.')
@@ -125,16 +132,14 @@ async function openDeleteModal(idToDelete) {
 
 // void (basicUrl!)
 async function submitDelete(id) {
-    fetch(basicUrl + id, {
-        method: 'DELETE'
-    })
+    fetch(basicUrl + id, {method: 'DELETE'})
         .then(res => res.text())
         .then(() => $('#tr' + id).remove())
     $('#modalDelete').modal('hide')
     console.log('...submitDeleteBtn click-bound function fully executed.')
 }
 
-// void (basicUrl!)
+// void (basicUrl! + ROLES!)
 async function submitEdit(id) {
     const user = {
         id: id,
@@ -167,86 +172,53 @@ async function submitEdit(id) {
 
 }
 
+// void (basicUrl! + ROLES!)
+async function addNewUser() {
+    const newUser = {
+        firstName: document.getElementById("onNewFirstName").value,
+        lastName: document.getElementById("onNewLastName").value,
+        email: document.getElementById("onNewEmail").value,
+        password: document.getElementById("onNewPassword").value,
+        roles: [{
+            id: 2,
+            authority: 'ROLE_USER'
+        }]                                                           // ACHTUNG!!!!!!!
+    }
 
-// void
-function bindButtons(baseUrl, roles) {
+    console.log(newUser)
+    fetch(basicUrl, {
+        method: 'POST',
+        body: newUser,
+        headers: {
+            'content-type': 'application/json'
+        }
+    })
+        .then(res => res.json())
+        .then(data => console.log(data))
 
+    // document.getElementById("onNewFirstName").value = ''
+    // document.getElementById("onNewLastName").value = ''
+    // document.getElementById("onNewEmail").value = ''
+    // document.getElementById("onNewPassword").value = ''
+
+    console.log('...newBtn click-bound function fully executed.')
 }
 
 // void
 async function refreshMainInfo(baseUrl) {
     await fetchAllUsers(baseUrl)
-    await bindButtons(baseUrl, roles)
 }
 
 //-------------------------------------------------------------------------------------------
 //-------------------------------------- Main section  --------------------------------------
 //-------------------------------------------------------------------------------------------
 
-
-// fetchAllUsers('http://localhost:8080/api/users')
-//     .then(() => {
-//         fetchPrincipal('http://localhost:8080/api/user')
-//             .then(() => {
-//                 console.log('principal info uploaded')
-//             })
-//     })
-//     .then(() => {
-//         fetchRoles('http://localhost:8080/api/roles')
-//             .then(() => {
-//                 console.log('roles fetched')
-//             })
-//     })
-//     .then(() => {
-//         console.log('vvvvvv Roles vvvvvvv')
-//         console.log(roles)
-//         console.log('^^^^^^^ Roles ^^^^^^^')
-//         console.log('role is ' + typeof roles)
-//         bindButtons(roles)
-//     })
-//     .then(() => {
-//         console.log('binded!')
-//     })
-
 $(document).ready(function () {
     fetchRoles('http://localhost:8080/api/roles')
         .then(() => fetchPrincipal('http://localhost:8080/api/user'))
         .then(() => refreshMainInfo(basicUrl))
 
-
-    // $('#addNewUser').click(function () {
-    //     const newUser = {
-    //         firstName: document.getElementById("onNewFirstName").value,
-    //         lastName: document.getElementById("onNewLastName").value,
-    //         email: document.getElementById("onNewEmail").value,
-    //         password: document.getElementById("onNewPassword").value,
-    //         roles: {
-    //             id: 2,
-    //             authority: 'ROLE_USER'
-    //         }                                                           // ACHTUNG!!!!!!!
-    //     }
-    //
-    //     console.log(newUser)
-    //     fetch(baseUrl, {
-    //         method: 'POST',
-    //         body: newUser,
-    //         headers: {
-    //             'content-type': 'application/json'
-    //         }
-    //     })
-    //         .then(res => res.json())
-    //         .then(data => console.log(data))
-    //
-    //     // document.getElementById("onNewFirstName").value = ''
-    //     // document.getElementById("onNewLastName").value = ''
-    //     // document.getElementById("onNewEmail").value = ''
-    //     // document.getElementById("onNewPassword").value = ''
-    //
-    //     console.log('...newBtn click-bound function fully executed.')
-    // })
-
     console.log('Loaded!')
-
 })
 
 

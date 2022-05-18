@@ -182,9 +182,6 @@
                                                                 <select class="custom-select"
                                                                         id="onEditRoles" size="2"
                                                                         name="roles" multiple>
-<!--                                                                    <option th:each="role: ${roleList}"-->
-<!--                                                                            th:value="${role.getId()}"-->
-<!--                                                                            th:text="${role.toString()}"></option>-->
                                                                 </select>
                                                             </div>
                                                         </b>
@@ -313,15 +310,12 @@
                                             <div class="form-group">
                                                 <label for="onNewRoles">Role(s)</label>
                                                 <select class="custom-select" id="onNewRoles" multiple>
-                                                    <!--                                                    <option th:each="role: ${roleList}"-->
-                                                    <!--                                                            th:value="${role.getId()}"-->
-                                                    <!--                                                            th:text="${role.toString()}"></option>-->
                                                     <option></option>
                                                 </select>
                                             </div>
 
                                             <button type="button" class="btn btn-success"
-                                                    id="addNewUser">
+                                                    onclick="addNewUser()">
                                                 Add new user
                                             </button>
                                         </b>
