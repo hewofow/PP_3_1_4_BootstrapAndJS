@@ -16,8 +16,8 @@ public class Role implements GrantedAuthority {
     @Column(name ="authority")
     private String authority;
 
-    @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER)
-    private Set<User> users = new HashSet<>();
+//    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
+//    private Set<User> users = new HashSet<>();
 
     public Role() {
     }
