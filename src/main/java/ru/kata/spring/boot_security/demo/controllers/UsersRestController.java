@@ -1,6 +1,7 @@
 package ru.kata.spring.boot_security.demo.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
@@ -21,38 +22,45 @@ public class UsersRestController {
         this.roleService = roleService;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("api/users")
     public List<User> getAllUsers() {
         return userService.listUsers();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/api/users/{id}")
     @ResponseBody
     public User getUserById(@PathVariable long id) {
         return userService.getById(id);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("api/roles")
     public List<Role> getAllRoles() {
         return roleService.listRoles();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/api/users/{id}")
     public void deleteUser(@PathVariable("id") long id) {
         userService.remove(id);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/api/users/{id}")
     public void updateUser(@RequestBody User user) {
         userService.update(user);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/api/users")
     public void createUser(@RequestBody User user) {
         userService.add(user);
     }
 
-    @GetMapping("/api/user")  // rename to api/users/principal or unite with getUser above
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    @GetMapping("/api/user")
     @ResponseBody
     public User getPrincipal(Principal principal) {
         return userService.findByEmail(principal.getName());

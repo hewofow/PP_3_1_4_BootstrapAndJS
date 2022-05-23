@@ -4,6 +4,8 @@
 let roles = []
 const basicUrl = 'http://localhost:8080/api/users/'
 
+// add function (?) for handling toggle logic and fill it with some logic from addNewUser and another functions
+
 // void
 async function fetchAllUsers(url) {
     const response = await fetch(url)
@@ -41,37 +43,37 @@ async function fetchAllUsers(url) {
 function fillTheRolesList(rolesArray, htmlElementId) {
     let rolesAsOptionsList = ''
     rolesArray.forEach((elem) => {
-        rolesAsOptionsList += '<option>' + elem.authority.substring(5) + '</option>'
+        rolesAsOptionsList += `<option id="${elem.id}">${elem.authority.substring(5)}</option>`
     })
     document.getElementById(htmlElementId).innerHTML = rolesAsOptionsList
 }
 
 // void
-async function fetchPrincipal(url) {
-    const response = await fetch(url)
-    const data = await response.json()
-    let email,
-        roles = ''
-
-    if (data != null) {
-        data.roles.forEach(r => {
-            roles += r.authority.substring(5) + ' '
-        })
-        email = data.email
-
-        let template = ``
-        template += `
-            <tr id="tr${data.id}">
-                <td class="text-wrap">${data.id}</td>
-                <td class="text-wrap">${data.firstName}</td>
-                <td class="text-wrap">${data.lastName}</td>
-                <td class="text-wrap">${email}</td>
-                <td class="text-wrap">${roles}</td>
-            </tr>`
-        document.getElementById('principalBody').innerHTML = template
-        document.getElementById('titlePrincipal').innerHTML = `<b> ${email} </b>  with roles:  ${roles}`
-    }
-}
+// async function fetchPrincipal(url) {
+//     const response = await fetch(url)
+//     const data = await response.json()
+//     let email,
+//         roles = ''
+//
+//     if (data != null) {
+//         data.roles.forEach(r => {
+//             roles += r.authority.substring(5) + ' '
+//         })
+//         email = data.email
+//
+//         let template = ``
+//         template += `
+//             <tr id="tr${data.id}">
+//                 <td class="text-wrap">${data.id}</td>
+//                 <td class="text-wrap">${data.firstName}</td>
+//                 <td class="text-wrap">${data.lastName}</td>
+//                 <td class="text-wrap">${email}</td>
+//                 <td class="text-wrap">${roles}</td>
+//             </tr>`
+//         document.getElementById('principalBody').innerHTML = template
+//         document.getElementById('titlePrincipal').innerHTML = `<b> ${email} </b>  with roles:  ${roles}`
+//     }
+// }
 
 // returns roles-objects array (remove global var &(?) fillTheRolesList() from the body)
 async function fetchRoles(url) {
@@ -83,17 +85,14 @@ async function fetchRoles(url) {
         data.forEach(r => {
             allRoles.push(r)
         })
-        console.log('Roles fetched!')
     }
 
-    console.log(allRoles)
     roles = allRoles
     fillTheRolesList(roles, 'onNewRoles')
-    return allRoles
 }
 
 // void (roles ???) (remove global var from the body)
-async function openEditModal(idToEdit) {
+function openEditModal(idToEdit) {
     fetch('/api/users/' + idToEdit)
         .then(result => result.json())
         .then(user => {
@@ -102,18 +101,16 @@ async function openEditModal(idToEdit) {
             document.getElementById("onEditLastName").value = user.lastName
             document.getElementById("onEditEmail").value = user.email
             document.getElementById("onEditPassword").value = ''
-            document.getElementById("submitEditBtn").setAttribute('onclick', `submitEdit(${idToEdit})`)
+            // document.getElementById("submitEditBtn").setAttribute('onclick', `submitEdit(${idToEdit})`)
 
             fillTheRolesList(roles, 'onEditRoles')
             document.getElementById('onEditRoles').value = user.roles
         })
-
-    $('#modalEdit').modal('show')
-    console.log('...editBtn click-bound function fully executed.')
+        .then($('#modalEdit').modal('show'))
 }
 
 // void
-async function openDeleteModal(idToDelete) {
+function openDeleteModal(idToDelete) {
     fetch('/api/users/' + idToDelete)
         .then(result => result.json())
         .then(user => {
@@ -125,88 +122,98 @@ async function openDeleteModal(idToDelete) {
             fillTheRolesList(user.roles, 'onDeleteRoles')
             document.getElementById("submitDeleteBtn").setAttribute('onclick', `submitDelete(${idToDelete})`)
         })
-
-    $('#modalDelete').modal('show')
-    console.log('...deleteBtn click-bound function fully executed.')
+        .then($('#modalDelete').modal('show'))
 }
 
 // void (basicUrl!)
-async function submitDelete(id) {
+function submitDelete(id) {
     fetch(basicUrl + id, {method: 'DELETE'})
-        .then(res => res.text())
         .then(() => $('#tr' + id).remove())
-    $('#modalDelete').modal('hide')
-    console.log('...submitDeleteBtn click-bound function fully executed.')
+        .then($('#modalDelete').modal('hide'))
 }
 
-// void (basicUrl! + ROLES!)
-async function submitEdit(id) {
+// void (basicUrl!)
+function submitEdit() {
+    let rolesSelectedInList = []
+    for (let option of document.getElementById('onEditRoles').options) {
+        if (option.selected) {
+            rolesSelectedInList.push({
+                id: option.id,
+                authority: option.value
+            })
+        }
+    }
+
+    const id = document.getElementById("onEditId").value
     const user = {
         id: id,
         firstName: document.getElementById("onEditFirstName").value,
         lastName: document.getElementById("onEditLastName").value,
         email: document.getElementById("onEditEmail").value,
         password: document.getElementById("onEditPassword").value,
-        roles: {
-            id: 2,
-            authority: 'ROLE_USER'
-        }                                                           // ACHTUNG!!!!!!!
+        roles: rolesSelectedInList
     }
-    console.log(user)
 
-    const requestCfg = {
+    fetch(basicUrl + id, {
         method: 'PUT',
-        body: user,
-        headers: {
-            'Content-Type': 'application/json;charset=UTF-8'
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(user)
+    })
+        .then(() => refreshMainInfo(basicUrl))
+        // .then($('#modalEdit').modal('hide'))
+        .then(() => {
+            resetEditModal()
+        })
+}
+
+// void (basicUrl!)
+function addNewUser() {
+    let rolesSelectedInList = []
+    for (let option of document.getElementById('onNewRoles').options) {
+        if (option.selected) {
+            rolesSelectedInList.push({
+                id: option.id,
+                authority: option.value
+            })
         }
     }
 
-    console.log(requestCfg)
-    fetch(basicUrl + id, requestCfg)
-        .then(res => res.json())
-        .then(data => console.log(data))
-    // .then(() => initialisation('http://localhost:8080/api/users'))     // BUUUUUUUUUUUUUUU
-    $('#modalEdit').modal('hide')
-    console.log('...submitEditBtn click-bound function fully executed.')
-
-}
-
-// void (basicUrl! + ROLES!)
-async function addNewUser() {
     const newUser = {
         firstName: document.getElementById("onNewFirstName").value,
         lastName: document.getElementById("onNewLastName").value,
         email: document.getElementById("onNewEmail").value,
         password: document.getElementById("onNewPassword").value,
-        roles: [{
-            id: 2,
-            authority: 'ROLE_USER'
-        }]                                                           // ACHTUNG!!!!!!!
+        roles: rolesSelectedInList
     }
 
-    console.log(newUser)
     fetch(basicUrl, {
         method: 'POST',
-        body: newUser,
-        headers: {
-            'content-type': 'application/json'
-        }
+        headers: {'content-type': 'application/json'},
+        body: JSON.stringify(newUser)
     })
-        .then(res => res.json())
-        .then(data => console.log(data))
-
-    // document.getElementById("onNewFirstName").value = ''
-    // document.getElementById("onNewLastName").value = ''
-    // document.getElementById("onNewEmail").value = ''
-    // document.getElementById("onNewPassword").value = ''
-
-    console.log('...newBtn click-bound function fully executed.')
+        .then(() => {
+            document.newUserForm.classList.remove('was-validated')
+            document.newUserForm.classList.add('needs-validation')
+            document.newUserForm.reset()
+        })
+        .then(() => {
+            refreshMainInfo(basicUrl)
+            $("#users-table").trigger("click");
+        })
 }
 
 // void
 async function refreshMainInfo(baseUrl) {
     await fetchAllUsers(baseUrl)
+}
+
+function resetEditModal() {
+    $('#modalEdit').modal('hide')
+    if (document.editUserForm.classList.contains('was-validated')) {
+        document.editUserForm.classList.remove('was-validated')
+        document.editUserForm.classList.add('needs-validation')
+    }
+    document.editUserForm.reset()
 }
 
 //-------------------------------------------------------------------------------------------
@@ -217,9 +224,39 @@ $(document).ready(function () {
     fetchRoles('http://localhost:8080/api/roles')
         .then(() => fetchPrincipal('http://localhost:8080/api/user'))
         .then(() => refreshMainInfo(basicUrl))
-
-    console.log('Loaded!')
 })
+
+
+// forms validation handler
+{
+    'use strict';
+    window.addEventListener('load', function () {
+        // Fetch all the forms we want to apply custom Bootstrap validation styles to
+        const forms = document.getElementsByClassName('needs-validation');
+        // Loop over them and prevent submission
+        const validation = Array.prototype.filter.call(forms, function (form) {
+            form.addEventListener('submit', function (event) {
+                event.preventDefault();
+
+                if (form.checkValidity() === false) {
+                    event.stopPropagation();
+                    form.classList.add('was-validated');
+                } else {
+                    switch (form.name) {
+                        case 'editUserForm':
+                            submitEdit();
+                            break;
+                        case 'newUserForm':
+                            addNewUser();
+                            break;
+                    }
+
+                }
+
+            }, false);
+        });
+    }, false);
+}
 
 
 

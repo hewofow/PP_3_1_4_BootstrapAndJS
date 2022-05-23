@@ -142,61 +142,77 @@
 
                                                 <div class="row justify-content-center">
                                                     <div class="modal-body text-center col-6">
-                                                        <b>
-                                                            <div class="form-group">
-                                                                <label for="onEditId">ID</label>
-                                                                <input type="text" class="form-control"
-                                                                       id="onEditId" name="id"
-                                                                       disabled="true">
-                                                            </div>
+                                                        <form class="needs-validation" role="form" name="editUserForm"
+                                                              id="editUserForm" novalidate>
+                                                            <b>
+                                                                <div class="form-group">
+                                                                    <label for="onEditId">ID</label>
+                                                                    <input type="text" class="form-control"
+                                                                           id="onEditId" name="id"
+                                                                           disabled="true">
+                                                                </div>
 
-                                                            <div class="form-group">
-                                                                <label for="onEditFirstName">First
-                                                                    name</label>
-                                                                <input type="text" class="form-control"
-                                                                       id="onEditFirstName"
-                                                                       name="firstName">
-                                                            </div>
+                                                                <div class="form-group">
+                                                                    <label for="onEditFirstName">First
+                                                                        name</label>
+                                                                    <input type="text" class="form-control"
+                                                                           id="onEditFirstName"
+                                                                           name="firstName" required>
+                                                                    <div class="invalid-feedback">
+                                                                        Please provide a first name
+                                                                    </div>
+                                                                </div>
 
-                                                            <div class="form-group">
-                                                                <label for="onEditLastName">Last
-                                                                    name</label>
-                                                                <input type="text" class="form-control"
-                                                                       id="onEditLastName" name="lastName">
-                                                            </div>
+                                                                <div class="form-group">
+                                                                    <label for="onEditLastName">Last
+                                                                        name</label>
+                                                                    <input type="text" class="form-control"
+                                                                           id="onEditLastName" name="lastName" required>
+                                                                    <div class="invalid-feedback">
+                                                                        Please provide a last name
+                                                                    </div>
+                                                                </div>
 
-                                                            <div class="form-group">
-                                                                <label for="onEditEmail">Email</label>
-                                                                <input type="email" class="form-control"
-                                                                       id="onEditEmail" name="email">
-                                                            </div>
+                                                                <div class="form-group">
+                                                                    <label for="onEditEmail">Email</label>
+                                                                    <input type="email" class="form-control"
+                                                                           id="onEditEmail" name="email" required>
+                                                                    <div class="invalid-feedback">
+                                                                        Please provide an e-mail
+                                                                    </div>
+                                                                </div>
 
-                                                            <div class="form-group">
-                                                                <label for="onEditPassword">Password</label>
-                                                                <input type="password" class="form-control"
-                                                                       id="onEditPassword" name="password">
-                                                            </div>
+                                                                <div class="form-group">
+                                                                    <label for="onEditPassword">Password</label>
+                                                                    <input type="password" class="form-control"
+                                                                           id="onEditPassword" name="password" required>
+                                                                    <div class="invalid-feedback">
+                                                                        Please provide a password
+                                                                    </div>
+                                                                </div>
 
-                                                            <div class="form-group">
-                                                                <label for="onEditRoles">Role(s)</label>
-                                                                <select class="custom-select"
-                                                                        id="onEditRoles" size="2"
-                                                                        name="roles" multiple>
-                                                                </select>
-                                                            </div>
-                                                        </b>
+                                                                <div class="form-group">
+                                                                    <label for="onEditRoles">Role(s)</label>
+                                                                    <select class="custom-select"
+                                                                            id="onEditRoles" size="2"
+                                                                            name="roles" multiple required>
+                                                                    </select>
+                                                                    <div class="invalid-feedback">
+                                                                        Please choose at least one role
+                                                                    </div>
+                                                                </div>
+                                                            </b>
+                                                        </form>
                                                     </div>
                                                 </div>
 
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary"
-                                                            data-dismiss="modal">
+                                                            data-dismiss="modal" onclick="resetEditModal()">
                                                         Close
                                                     </button>
-                                                    <button type="submit" class="btn btn-primary"
-                                                            id="submitEditBtn">
-                                                        Edit
-                                                    </button>
+                                                    <input type="submit" class="btn btn-primary" value="Edit"
+                                                           form="editUserForm">
                                                 </div>
                                             </div>
                                         </div>
@@ -250,9 +266,9 @@
                                                                 <select class="custom-select"
                                                                         id="onDeleteRoles" size="2"
                                                                         disabled="true">
-<!--                                                                    <option th:each="role: ${userFromList.getRoles()}"-->
-<!--                                                                            th:value="${role.getId()}"-->
-<!--                                                                            th:text="${role.toString()}"></option>-->
+                                                                    <!--                                                                    <option th:each="role: ${userFromList.getRoles()}"-->
+                                                                    <!--                                                                            th:value="${role.getId()}"-->
+                                                                    <!--                                                                            th:text="${role.toString()}"></option>-->
                                                                     <option></option>
                                                                 </select>
                                                             </div>
@@ -285,39 +301,53 @@
                                     <h5>Add new user</h5>
                                 </div>
                                 <div class="card-body text-center">
-                                    <form class="container col-3" role="form">
+                                    <form class="container col-3 needs-validation" role="form" name="newUserForm"
+                                          id="newUserForm" onsubmit="" novalidate>
                                         <b>
                                             <div class="form-group">
                                                 <label for="onNewFirstName">First name</label>
-                                                <input type="text" class="form-control" id="onNewFirstName">
+                                                <input type="text" class="form-control" id="onNewFirstName" required>
+                                                <div class="invalid-feedback">
+                                                    Please provide a first name
+                                                </div>
                                             </div>
 
                                             <div class="form-group">
                                                 <label for="onNewLastName">Last name</label>
-                                                <input type="text" class="form-control" id="onNewLastName">
+                                                <input type="text" class="form-control" id="onNewLastName" required>
+                                                <div class="invalid-feedback">
+                                                    Please provide a last name
+                                                </div>
                                             </div>
 
                                             <div class="form-group">
                                                 <label for="onNewEmail">Email</label>
-                                                <input type="email" class="form-control" id="onNewEmail">
+                                                <input type="email" class="form-control" id="onNewEmail" required>
+                                                <div class="invalid-feedback">
+                                                    Please provide an email
+                                                </div>
                                             </div>
 
                                             <div class="form-group">
                                                 <label for="onNewPassword">Password</label>
-                                                <input type="password" class="form-control" id="onNewPassword">
+                                                <input type="password" class="form-control" id="onNewPassword" required>
+                                                <div class="invalid-feedback">
+                                                    Please provide a password
+                                                </div>
                                             </div>
 
                                             <div class="form-group">
                                                 <label for="onNewRoles">Role(s)</label>
-                                                <select class="custom-select" id="onNewRoles" multiple>
+                                                <select class="custom-select" id="onNewRoles" multiple required>
                                                     <option></option>
                                                 </select>
+                                                <div class="invalid-feedback">
+                                                    Please choose at least one role
+                                                </div>
                                             </div>
 
-                                            <button type="button" class="btn btn-success"
-                                                    onclick="addNewUser()">
-                                                Add new user
-                                            </button>
+                                            <input type="submit" class="btn btn-success"
+                                                   value="Add new user">
                                         </b>
                                     </form>
                                 </div>
@@ -366,5 +396,6 @@
         crossorigin="anonymous"></script>
 
 <script src="/js/index.js"></script>
+<script src="/js/user.js"></script>
 </body>
 </html>
