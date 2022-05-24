@@ -24,17 +24,20 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    @Transactional
     public void add(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
     }
 
     @Override
+    @Transactional
     public void remove(long id) {
         userRepository.deleteById(id);
     }
 
     @Override
+    @Transactional
     public void update(User user) {
         user.setPassword(user.getPassword().equals("")  ?
                 getById(user.getId()).getPassword() :

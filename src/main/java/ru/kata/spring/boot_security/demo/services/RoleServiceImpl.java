@@ -16,12 +16,15 @@ public class RoleServiceImpl implements RoleService {
     public RoleServiceImpl(RoleRepository roleRepository) { this.roleRepository = roleRepository; }
 
     @Override
+    @Transactional
     public void add(Role role) { this.roleRepository.save(role); }
 
     @Override
+    @Transactional
     public void remove(long id) { this.roleRepository.deleteById(id); }
 
     @Override
+    @Transactional
     public void update(Role role) { this.roleRepository.save(role); }
 
     @Override

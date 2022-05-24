@@ -1,6 +1,9 @@
 package ru.kata.spring.boot_security.demo.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.kata.spring.boot_security.demo.models.Role;
@@ -12,6 +15,7 @@ import java.security.Principal;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/")
 public class UsersRestController {
     private final UserService userService;
     private final RoleService roleService;
@@ -23,46 +27,44 @@ public class UsersRestController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("api/users")
-    public List<User> getAllUsers() {
-        return userService.listUsers();
+    @GetMapping("users")
+    public ResponseEntity<List<User>> getAllUsers() {
+        return ResponseEntity.ok(userService.listUsers());
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/api/users/{id}")
-    @ResponseBody
-    public User getUserById(@PathVariable long id) {
-        return userService.getById(id);
+    @GetMapping("users/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable long id) {
+        return ResponseEntity.ok(userService.getById(id));
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("api/roles")
-    public List<Role> getAllRoles() {
-        return roleService.listRoles();
+    @GetMapping("roles")
+    public ResponseEntity<List<Role>> getAllRoles() {
+        return ResponseEntity.ok(roleService.listRoles());
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/api/users/{id}")
+    @DeleteMapping("users/{id}")
     public void deleteUser(@PathVariable("id") long id) {
         userService.remove(id);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PutMapping("/api/users/{id}")
+    @PutMapping("users/{id}")
     public void updateUser(@RequestBody User user) {
         userService.update(user);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/api/users")
+    @PostMapping("users")
     public void createUser(@RequestBody User user) {
         userService.add(user);
     }
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
-    @GetMapping("/api/user")
-    @ResponseBody
-    public User getPrincipal(Principal principal) {
-        return userService.findByEmail(principal.getName());
+    @GetMapping("user")
+    public ResponseEntity<User> getPrincipal(Principal principal) {
+        return ResponseEntity.ok(userService.findByEmail(principal.getName()));
     }
 }
