@@ -38,6 +38,12 @@ public class UsersRestController {
         return ResponseEntity.ok(userService.getById(id));
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    @GetMapping("user")
+    public ResponseEntity<User> getPrincipal(Principal principal) {
+        return ResponseEntity.ok(userService.findByEmail(principal.getName()));
+    }
+
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("roles")
     public ResponseEntity<List<Role>> getAllRoles() {
@@ -46,25 +52,22 @@ public class UsersRestController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("users/{id}")
-    public void deleteUser(@PathVariable("id") long id) {
+    public ResponseEntity<Void> deleteUser(@PathVariable("id") long id) {
         userService.remove(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("users/{id}")
-    public void updateUser(@RequestBody User user) {
+    public ResponseEntity<Void> updateUser(@RequestBody User user) {
         userService.update(user);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("users")
-    public void createUser(@RequestBody User user) {
+    public ResponseEntity<Void> createUser(@RequestBody User user) {
         userService.add(user);
-    }
-
-    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
-    @GetMapping("user")
-    public ResponseEntity<User> getPrincipal(Principal principal) {
-        return ResponseEntity.ok(userService.findByEmail(principal.getName()));
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
